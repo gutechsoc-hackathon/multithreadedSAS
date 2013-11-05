@@ -60,6 +60,7 @@ class DataGraph{
 
 		outer:
 		while(!following.isEmpty()){
+			Node next = following.peek();
 			for(Node adjacent: next.m_adjacent){
 				if(!adjacent.m_visited){
 					adjacent.visit();
