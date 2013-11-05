@@ -2,14 +2,14 @@ import java.util.ArrayList;
 class Node{
 	final int m_id;
 	boolean m_visited;
-	boolean m_revVisited;
+	int m_group;
 	ArrayList<Node> m_adjacent;
-    ArrayList<Node> m_reverse_adjacent;
+    ArrayList<Node> m_revAdjacent;
 
     public Node(int id){
         m_id = id;
         m_adjacent = new ArrayList<Node>();
-        m_reverse_adjacent = new ArrayList<Node>();
+        m_revAdjacent = new ArrayList<Node>();
         m_visited = false;
     }
     
@@ -17,11 +17,15 @@ class Node{
     	m_adjacent.add(node);
     }
     protected void add_reverse(Node node){
-    	m_reverse_adjacent.add(node);
+    	m_revAdjacent.add(node);
     }
 
     public void visit(){
     	m_visited = true;
+    }
+    
+    public void group(int node_id){
+    	m_group = node_id;
     }
     
     public void reset(){

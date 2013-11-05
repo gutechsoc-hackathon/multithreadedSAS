@@ -47,9 +47,10 @@ class Kosaraju{
     	mydata.addNode(n11);
     	mydata.DepthFirstSearch();
     	System.out.println("hahahaha");
-    	while (!mydata.KosarajuStack.empty()){
-    		System.out.println(mydata.KosarajuStack.pop().m_id);
-    	}
+    	//while (!mydata.KosarajuStack.empty()){
+    	//	System.out.println(mydata.KosarajuStack.pop().m_id);
+    	//}
+    	mydata.markGroups();
 
     }
     
