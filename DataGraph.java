@@ -36,6 +36,20 @@ class DataGraph{
 			following.pop();
 		}
 	}
+	/**
+	 * This potentially .m_id);
+		for(Node adjacent: node.m_adjacent){
+	 */
+	public void recursiveKosaraju(Node node){
+		node.visit();
+		System.out.println(node.m_id);
+		for(Node adjacent: node.m_adjacent){
+			if (!adjacent.m_visited){
+				recursiveKosaraju(adjacent);
+			}
+		}
+		KosarajuStack.push(node);
+	}
 	
 	public void DepthFirstSearch(){
 		//Node first = index.elements().nextElement();
@@ -43,16 +57,17 @@ class DataGraph{
 		Stack<Node> following = new Stack<Node>();
 		following.push(first);
 		first.visit();
+
 		outer:
 		while(!following.isEmpty()){
-			Node next = following.peek();
 			for(Node adjacent: next.m_adjacent){
 				if(!adjacent.m_visited){
-					//System.out.println(adjacent.m_id);
 					adjacent.visit();
+					System.out.println(next.m_id);
 					following.push(adjacent);
 					continue outer;
 				}
+
 			}
 			KosarajuStack.push(following.pop());
 		}

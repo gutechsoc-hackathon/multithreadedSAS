@@ -2,7 +2,7 @@ import java.util.ArrayList;
 class Node{
 	final int m_id;
 	boolean m_visited;
-	boolean m_explored;
+	boolean m_revVisited;
 	ArrayList<Node> m_adjacent;
     ArrayList<Node> m_reverse_adjacent;
 
@@ -16,7 +16,6 @@ class Node{
     protected void add_adjacent(Node node){
     	m_adjacent.add(node);
     }
-
     protected void add_reverse(Node node){
     	m_reverse_adjacent.add(node);
     }
@@ -25,13 +24,8 @@ class Node{
     	m_visited = true;
     }
     
-    public void explored(){
-    	m_explored = true;
-    }
-    
     public void reset(){
     	m_visited = false;
-    	m_explored = false;
     }
     
     public void add_out(Node to){
