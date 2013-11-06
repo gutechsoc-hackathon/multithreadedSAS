@@ -1,45 +1,55 @@
-import java.util.ArrayList;
+import java.util.Set;
+
 class Node{
-	final int m_id;
-	boolean m_visited;
-	int m_group;
-	ArrayList<Node> m_adjacent;
-    ArrayList<Node> m_revAdjacent;
-
+	final int id;
+	boolean predecessor;
+	boolean descendant;
+	int group;
+	
+	/**
+	 * @param id id == 0 will break your code. You have been warned.
+	 */
+	
     public Node(int id){
-        m_id = id;
-        m_adjacent = new ArrayList<Node>();
-        m_revAdjacent = new ArrayList<Node>();
-        m_visited = false;
+        this.id = id;
+        predecessor = false;
+    	descendant = false;
+    	this.group = 0;
     }
     
-    protected void add_adjacent(Node node){
-    	m_adjacent.add(node);
-    }
-    protected void add_reverse(Node node){
-    	m_revAdjacent.add(node);
-    }
-
-    public void visit(){
-    	m_visited = true;
-    }
-    
-    public void group(int node_id){
-    	m_group = node_id;
+    public synchronized void mark_predecessor(Set<Node> scc, Set<Node> remainder, Set<Node> predecessors){
+        assert(predecessor != true);
+        predecessor = true;
+        if(descendant == true){
+            scc.add(this);
+        }
+        predecessors.add(this);
+        boolean removal = remainder.remove(this);
+        assert(removal);
+        notifyAll();
     }
     
-    public void reset(){
-    	m_visited = false;
+    public synchronized void mark_descendant(Set<Node> scc, Set<Node> remainder, Set<Node> descendants){
+        assert(descendant != true);
+        descendant = true;
+        if(predecessor == true){
+            scc.add(this);
+        }
+        descendants.add(this);
+        boolean removal = remainder.remove(this);
+        assert(removal);
+        notifyAll();
     }
     
-    public void add_out(Node to){
-    	m_adjacent.add(to);
-    	to.add_reverse(this);
+    public synchronized void reset(){
+        predecessor = false;
+        descendant = false;
+        notifyAll();
     }
     
-    public void add_in(Node from){
-    	from.add_adjacent(this);
-    	add_reverse(from);
+    public synchronized void mark_group(int id){
+        group = id;
+        notifyAll();
     }
 
 }
