@@ -26,8 +26,8 @@ class Node implements Comparable<Node>{
             graph.descendants.remove(this);
         } else{
             graph.predecessors.add(this);
+            graph.remainder.remove(this);
         }
-        graph.remainder.remove(this);
         notifyAll();
     }
     
@@ -39,8 +39,8 @@ class Node implements Comparable<Node>{
             graph.predecessors.remove(this);
         } else{
             graph.descendants.add(this);            
+            graph.remainder.remove(this);
         }
-        graph.remainder.remove(this);
         notifyAll();
     }
     
