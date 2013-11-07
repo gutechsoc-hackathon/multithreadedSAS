@@ -1,7 +1,7 @@
 import java.util.Set;
 
-class Node{
-	final int id;
+class Node implements Comparable<Node>{
+	final long id;
 	boolean predecessor;
 	boolean descendant;
 	int group;
@@ -10,34 +10,37 @@ class Node{
 	 * @param id id == 0 will break your code. You have been warned.
 	 */
 	
-    public Node(int id){
+    public Node(long id){
+        assert(id != 0);
         this.id = id;
         predecessor = false;
     	descendant = false;
     	this.group = 0;
     }
     
-    public synchronized void mark_predecessor(Set<Node> scc, Set<Node> remainder, Set<Node> predecessors){
+    public synchronized void mark_predecessor(DataGraph graph){
         assert(predecessor != true);
         predecessor = true;
         if(descendant == true){
-            scc.add(this);
+            graph.scc.add(this);
+            graph.descendants.remove(this);
+        } else{
+            graph.predecessors.add(this);
         }
-        predecessors.add(this);
-        boolean removal = remainder.remove(this);
-        assert(removal);
+        graph.remainder.remove(this);
         notifyAll();
     }
     
-    public synchronized void mark_descendant(Set<Node> scc, Set<Node> remainder, Set<Node> descendants){
+    public synchronized void mark_descendant(DataGraph graph){
         assert(descendant != true);
         descendant = true;
         if(predecessor == true){
-            scc.add(this);
+            graph.scc.add(this);
+            graph.predecessors.remove(this);
+        } else{
+            graph.descendants.add(this);            
         }
-        descendants.add(this);
-        boolean removal = remainder.remove(this);
-        assert(removal);
+        graph.remainder.remove(this);
         notifyAll();
     }
     
@@ -52,4 +55,8 @@ class Node{
         notifyAll();
     }
 
+    @Override
+    public int compareTo(Node node) {
+        return Long.compare(this.id, node.id);
+    }
 }
