@@ -9,6 +9,122 @@ import org.junit.Test;
 
 public class Coppersmith2005Test {
     @Test
+    public void repeatElements(){
+        Random generator = new Random();
+        final int test_rep = 30;
+        final int nodeNumber = 20;
+        final int thread_number = 8;
+        final int test_length = 100;
+        
+        class PreDesThread extends Thread{
+            int track;
+            boolean[][] operation;
+            int[][] order;
+            Node[] nodes;
+            DataGraph dg;
+            public PreDesThread(int track, boolean[][] operation, int[][] order, Node[] nodes, DataGraph dg){
+                super();
+                this.track = track;
+                this.operation = operation;
+                this.order = order;
+                this.dg = dg;
+                this.nodes = nodes;
+            }
+            @Override
+            public void run(){
+                for(int i = 0; i < test_length; i++){
+                    Node node = nodes[order[track][i]];
+                    //System.out.print(node.id);
+                    
+                    if(operation[track][i]){
+                        node.mark_predecessor(dg);
+                    } else {
+                        node.mark_descendant(dg);
+                    }
+                            
+                }                
+            }
+
+        }
+        for(int i = 0; i < test_rep; i++){
+            final DataGraph dg = new DataGraph();
+            final Node[] nodes = new Node[nodeNumber];
+            final int[][] order = new int[thread_number][test_length];
+            final boolean[][] operation = new boolean[thread_number][test_length];
+            PreDesThread[] threads = new PreDesThread[thread_number];
+            
+            for(int ii = 1; ii <= nodeNumber; ii++){
+                nodes[ii - 1] = new Node(ii);
+                dg.remainder.add(nodes[ii - 1]);
+            }
+
+            for(int ti = 0; ti < thread_number; ti++){
+                for(int tii = 0; tii < test_length; tii++){
+                    order[ti][tii] = generator.nextInt(3);
+                }
+            }
+            
+            for(int ti = 0; ti < thread_number; ti++){
+                for(int tii = 0; tii < test_length; tii++){
+                    operation[ti][tii] = generator.nextBoolean();
+                }
+            }
+            
+            for(int ti = 0; ti < thread_number; ti++){
+                threads[ti] = new PreDesThread(ti, operation, order, nodes, dg);
+            }
+            
+            for(int ti = 0; ti < thread_number; ti++){
+                threads[ti].start();
+            }
+                   
+        }
+
+    }
+    @Test
+    public void sanityCheck(){
+        DataGraph dg = new DataGraph();
+        Node n1 = new Node(1);
+        Node n2 = new Node(2);
+        Node n3 = new Node(3);
+        Node n4 = new Node(4);
+        Node n5 = new Node(5);
+        
+        dg.remainder.add(n1);
+        dg.remainder.add(n2);
+        dg.remainder.add(n3);
+        dg.remainder.add(n4);
+        dg.remainder.add(n5);
+        
+        n1.mark_predecessor(dg);
+        n2.mark_predecessor(dg);
+        n3.mark_descendant(dg);
+        n2.mark_predecessor(dg);
+        n1.mark_descendant(dg);
+        
+        Node[] scc = new Node[1];
+        dg.scc.toArray(scc);
+        Assert.assertTrue(scc.length == 1);
+        Assert.assertTrue(scc[0].id == 1);
+
+        Node[] descendants = new Node[1];
+        dg.descendants.toArray(descendants);
+        Assert.assertTrue(descendants.length == 1);
+        Assert.assertTrue(descendants[0].id == 3);
+
+        Node[] predecessors = new Node[1];
+        dg.predecessors.toArray(predecessors);
+        Assert.assertTrue(dg.predecessors.size() == 1);
+        Assert.assertTrue(predecessors[0].id == 2);
+
+        Node[] remainder = new Node[2];
+        dg.remainder.toArray(remainder);
+        Assert.assertTrue(dg.remainder.size() == 2);
+        Arrays.sort(remainder);
+        Assert.assertTrue(remainder[0].id == 4);
+        Assert.assertTrue(remainder[1].id == 5);
+    }
+    @Test
     /**
      * That's another test, which looks for possible race condition when there's a lot of threads pushing to one hashset.
      */
@@ -26,7 +142,7 @@ public class Coppersmith2005Test {
     
         Collections.shuffle(pullList);
 
-        int numberOfThreads = 180;      
+        int numberOfThreads = 30;      
         Random generator = new Random();
         
         final int partition[] = new int[numberOfThreads + 1];
