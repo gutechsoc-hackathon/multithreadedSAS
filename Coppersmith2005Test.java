@@ -130,7 +130,7 @@ public class Coppersmith2005Test {
      */
     public void multiThreads() throws InterruptedException{
         final DataGraph multiGraph = new DataGraph();
-        int size = Globals.problemSize;
+        int size = Globals.problemSizeTests;
         for(int i = 1; i <= size; i++){
             int id = i;
             multiGraph.remainder.add(new Node(id));
@@ -148,10 +148,10 @@ public class Coppersmith2005Test {
         final int partition[] = new int[numberOfThreads + 1];
         partition[0] = 0;
         for(int i = 1; i < numberOfThreads; i++){
-            partition[i] = generator.nextInt(Globals.problemSize + 1);
+            partition[i] = generator.nextInt(Globals.problemSizeTests + 1);
         }
         
-        partition[numberOfThreads] = Globals.problemSize;
+        partition[numberOfThreads] = Globals.problemSizeTests;
         Arrays.sort(partition);
         
         abstract class PreDesThread extends Thread{
@@ -202,11 +202,11 @@ public class Coppersmith2005Test {
         for(int i = 0; i < numberOfThreads; i++){
             descendantsThreads[i] = new DesThread(partition[i], partition[i + 1], pullList);
         }
-        Assert.assertTrue(multiGraph.remainder.size() + multiGraph.predecessors.size() + multiGraph.descendants.size() + multiGraph.scc.size() == Globals.problemSize);
+        Assert.assertTrue(multiGraph.remainder.size() + multiGraph.predecessors.size() + multiGraph.descendants.size() + multiGraph.scc.size() == Globals.problemSizeTests);
         
         //some more assertions
                 
-        Long[] entire = new Long[Globals.problemSize];
+        Long[] entire = new Long[Globals.problemSizeTests];
         
         for(PreThread thread: predecessorThreads){
             thread.start();
@@ -230,9 +230,9 @@ public class Coppersmith2005Test {
         }
         
         Arrays.sort(entire);
-        Long[] compare = new Long[Globals.problemSize];
+        Long[] compare = new Long[Globals.problemSizeTests];
         
-        for(long li = 0; li < Globals.problemSize; li++){
+        for(long li = 0; li < Globals.problemSizeTests; li++){
             compare[(int)li] = li + 1;
         }
         
@@ -250,9 +250,9 @@ public class Coppersmith2005Test {
      */
     public void twoThreads() throws InterruptedException {
         final DataGraph multiGraph = new DataGraph();
-        int size = Globals.problemSize;
-        int pullPreSize = Globals.problemSize/2;
-        int pullDesSize = Globals.problemSize/2;
+        int size = Globals.problemSizeTests;
+        int pullPreSize = Globals.problemSizeTests/2;
+        int pullDesSize = Globals.problemSizeTests/2;
         for(int i = 1; i <= size; i++ ){
             int id = i; //generator.nextLong()
             multiGraph.remainder.add(new Node(id));
@@ -307,7 +307,7 @@ public class Coppersmith2005Test {
         //System.out.println(Globals.problemSize);
         //System.out.println(multiGraph.remainder.size());
         //System.out.println(multiGraph.scc.size());
-        Assert.assertTrue(multiGraph.remainder.size() + multiGraph.predecessors.size() + multiGraph.descendants.size() + multiGraph.scc.size() == Globals.problemSize);
+        Assert.assertTrue(multiGraph.remainder.size() + multiGraph.predecessors.size() + multiGraph.descendants.size() + multiGraph.scc.size() == Globals.problemSizeTests);
         
         //some more assertions
         
@@ -343,7 +343,7 @@ public class Coppersmith2005Test {
         Assert.assertArrayEquals(pullPre, pushPre);
         Assert.assertArrayEquals(pullDes, pushDes);
         
-        Long[] entire = new Long[Globals.problemSize];
+        Long[] entire = new Long[Globals.problemSizeTests];
         
         ii = 0;
 
@@ -369,9 +369,9 @@ public class Coppersmith2005Test {
         }
         
         Arrays.sort(entire);
-        Long[] compare = new Long[Globals.problemSize];
+        Long[] compare = new Long[Globals.problemSizeTests];
         
-        for(long li = 0; li < Globals.problemSize; li++){
+        for(long li = 0; li < Globals.problemSizeTests; li++){
             compare[(int)li] = li + 1;
         }
         
