@@ -1,0 +1,1 @@
+java -cp /usr/share/java/junit4.jar:./ org.junit.runner.JUnitCore Coppersmith2005

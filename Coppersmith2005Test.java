@@ -23,6 +23,7 @@ public class Coppersmith2005Test {
         System.out.println(map.containsKey(7));
         
     }
+    
     @Test
     public void repeatElements(){
         Random generator = new Random();
@@ -61,6 +62,7 @@ public class Coppersmith2005Test {
             }
 
         }
+        
         for(int i = 0; i < test_rep; i++){
             final DataGraph dg = new DataGraph();
             final Node[] nodes = new Node[nodeNumber];
