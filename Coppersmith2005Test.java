@@ -2,12 +2,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+//import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 
 public class Coppersmith2005Test {
+    public static int bigHashMapSize = 85000; // should create 680 MB size object; Will the object creation scale?
+    @Test
+    public void createBigHashMap(){
+        Random generator = new Random();
+        ConcurrentHashMap<Node, Boolean> map = new ConcurrentHashMap<Node, Boolean>(bigHashMapSize);
+        
+        for (int i = 0; i <= 1; i++){
+            map.put(new Node(generator.nextLong()), true);
+        }
+        map.keys().nextElement();
+        System.out.println(map.containsKey(7));
+        
+    }
     @Test
     public void repeatElements(){
         Random generator = new Random();
@@ -55,7 +70,7 @@ public class Coppersmith2005Test {
             
             for(int ii = 1; ii <= nodeNumber; ii++){
                 nodes[ii - 1] = new Node(ii);
-                dg.remainder.add(nodes[ii - 1]);
+                dg.addNode(nodes[ii - 1]);
             }
 
             for(int ti = 0; ti < thread_number; ti++){
@@ -90,11 +105,11 @@ public class Coppersmith2005Test {
         Node n4 = new Node(4);
         Node n5 = new Node(5);
         
-        dg.remainder.add(n1);
-        dg.remainder.add(n2);
-        dg.remainder.add(n3);
-        dg.remainder.add(n4);
-        dg.remainder.add(n5);
+        dg.addNode(n1);
+        dg.addNode(n2);
+        dg.addNode(n3);
+        dg.addNode(n4);
+        dg.addNode(n5);
         
         n1.mark_predecessor(dg);
         n2.mark_predecessor(dg);
@@ -133,7 +148,7 @@ public class Coppersmith2005Test {
         int size = Globals.problemSizeTests;
         for(int i = 1; i <= size; i++){
             int id = i;
-            multiGraph.remainder.add(new Node(id));
+            multiGraph.addNode(new Node(id));
         }
     
         Node[] remainderFlat = new Node[multiGraph.remainder.size()];
@@ -255,7 +270,7 @@ public class Coppersmith2005Test {
         int pullDesSize = Globals.problemSizeTests/2;
         for(int i = 1; i <= size; i++ ){
             int id = i; //generator.nextLong()
-            multiGraph.remainder.add(new Node(id));
+            multiGraph.addNode(new Node(id));
         }
 
         Node[] remainderFlat = new Node[multiGraph.remainder.size()];

@@ -10,31 +10,47 @@ class DataGraph{
     static ConcurrentLinkedDeque<Node> stack = new ConcurrentLinkedDeque<Node>();
 
     //TODO remainder creation can be tweaked for performance
-    //TODO folks on SO say to look at ConcurrentHashMap for performance. 
-    Set<Node> remainder = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
-    Set<Node> scc = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
-    Set<Node> predecessors = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
-    Set<Node> descendants = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+    //TODO folks on SO say to look at ConcurrentHashMap for performance.
+    //TODO here's an idea -- you can split remainder into t hashtables, where t is the number of available threads. And then every thread can do marking/ etc in it
+    Set<Node> remainder;
+    Set<Node> scc;
+    Set<Node> predecessors;
+    Set<Node> descendants;
     
-    DataGraph(){}
-    DataGraph(Set<Node> remainder){
+    public DataGraph(){
+        remainder = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+        scc = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+        predecessors = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+        descendants = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+    }
+
+    public DataGraph(Set<Node> remainder){
         this.remainder = remainder;
+        //TODO adjust the size?
+        scc = Collections.synchronizedSet(new HashSet<Node>(remainder.size()));
+        predecessors = Collections.synchronizedSet(new HashSet<Node>(remainder.size()));
+        descendants = Collections.synchronizedSet(new HashSet<Node>(remainder.size()));
     }
     
-    DataGraph(Iterable<Node> nodes){
+    public DataGraph(Iterable<Node> nodes){
+        remainder = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
         for (Node node : nodes){
             remainder.add(node);
         }
     }
     
-    DataGraph(Node[] nodes){
+    public DataGraph(Node[] nodes){
         for (Node node : nodes){
             remainder.add(node);
         }
+    }
+    
+    public void addNode(Node node){
+        node.reset(this);
+        this.remainder.add(node);
     }
     
     /**
-     * 
      * @param start -- this should be started immediately when threadPool spins a new thread. The job should be accessible from the stack if the stack is empty. The threadPool should wait for all threads to finish and once they do check for emptiness of stack. Or something like that. Thread safe. 
      */
     public void depthSearchPredecessors(Node start){
