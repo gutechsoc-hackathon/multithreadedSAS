@@ -3,18 +3,74 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.LinkedList;
 //import java.util.concurrent.ConcurrentHashMap;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 
+
 public class Coppersmith2005Test{
     public static int bigHashMapSize = 85000; // should create 680 MB size object; Will the object creation scale?
+    final static int treeElements = 25;
+    final static int treeWidth = 2;
+    static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
     
     @Test
     public void testVisitor(){
+        DataGraph dg = new DataGraph();
+        LinkedList<Node> all = new LinkedList<Node>();
+        int already = 2;
+        Node root = new Node(1);
+
+        LinkedList<Node> bfs = new LinkedList<Node>(); 
+        bfs.addFirst(root);
+        all.addFirst(root);
+        while(already <= treeElements){
+            Node subroot = bfs.pollLast();
+            for(int i = 1; i <= treeWidth; i++){
+                Node newElement = new Node(already);
+                subroot.connectChild(newElement);
+                all.addFirst(newElement);
+                bfs.addFirst(newElement);
+                already += 1;
+            }
+        }
         
+        for(Node element: root.children.get(0).children){
+            System.out.println(element.id);
+        }
+        
+        System.out.println("hahaha");
+        for(Node element: all){
+            element.reset(dg);
+            //System.out.println(element.id);
+        }
+        ExplorePredecessor magia = new ExplorePredecessor(threadPool, root, dg);
+        threadPool.submit(magia);
+        //threadPool.
+        synchronized (ExplorePredecessor.counter){
+            while (ExplorePredecessor.counter.get() != 0){
+                try {
+                    System.out.println(ExplorePredecessor.counter.get());
+                    ExplorePredecessor.counter.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Node[] array = new Node[treeElements];
+        dg.predecessors.toArray(array);
+        for(Node node: array){
+            System.out.println("enlist: " + node.id);
+        }
+        Arrays.sort(array);
+        for(int i = 0; i < treeElements; i++){
+           Assert.assertTrue(array[i].id == (i + 1));
+        }         
     }
     
     @Test
