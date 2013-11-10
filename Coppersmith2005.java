@@ -18,7 +18,7 @@ public class Coppersmith2005{
             Enumeration<Long> enumeration = chm.keys();
             while(enumeration.hasMoreElements()){
                 chm.get(enumeration.nextElement()).reset(dg);
-            }                
+            }
         }
     }
     

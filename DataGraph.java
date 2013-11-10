@@ -10,38 +10,40 @@ class DataGraph{
     //TODO remainder creation can be tweaked for performance
     //TODO folks on SO say to look at ConcurrentHashMap for performance.
     //TODO here's an idea -- you can split remainder into t hashtables, where t is the number of available threads. And then every thread can do marking/ etc in it
-    Set<Node> remainder;
-    Set<Node> scc;
-    Set<Node> predecessors;
-    Set<Node> descendants;
+    
+    NodeHashMap remainder;
+    NodeHashMap scc;
+    NodeHashMap predecessors;
+    NodeHashMap descendants;
     
     public DataGraph(){
-        remainder = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
-        scc = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
-        predecessors = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
-        descendants = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+        remainder = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
+        scc = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
+        predecessors = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
+        descendants = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
     }
 
-    public DataGraph(Set<Node> remainder){
+    public DataGraph(NodeHashMap remainder){
         this.remainder = remainder;
         //TODO adjust the size?
-        scc = Collections.synchronizedSet(new HashSet<Node>(remainder.size()));
-        predecessors = Collections.synchronizedSet(new HashSet<Node>(remainder.size()));
-        descendants = Collections.synchronizedSet(new HashSet<Node>(remainder.size()));
+        scc = new NodeHashMap(Globals.threads, Globals.sizeToCap(remainder.size()), Globals.loadFactor);
+        predecessors = new NodeHashMap(Globals.threads, Globals.sizeToCap(remainder.size()), Globals.loadFactor);
+        descendants = new NodeHashMap(Globals.threads, Globals.sizeToCap(remainder.size()), Globals.loadFactor);
     }
     
     public DataGraph(Iterable<Node> nodes){
-        remainder = Collections.synchronizedSet(new HashSet<Node>(Globals.hashMapCap));
+        remainder = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
         for (Node node : nodes){
             remainder.add(node);
         }
     }
     
-    public DataGraph(Node[] nodes){
+    /*public DataGraph(Node[] nodes){
+        remainder = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
         for (Node node : nodes){
             remainder.add(node);
         }
-    }
+    }*/
     
     public void addNode(Node node){
         node.reset(this);
