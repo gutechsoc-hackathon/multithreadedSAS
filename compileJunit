@@ -1,1 +1,1 @@
-javac -cp /usr/share/java/junit4.jar:./ Coppersmith2005.java
+javac -cp junit4.jar:./ Coppersmith2005Test.java
