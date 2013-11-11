@@ -1,17 +1,17 @@
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class UltimateRecurssion implements Runnable{
     static AtomicInteger counter = new AtomicInteger(1);
-    static LinkedList<NodeHashMap> solutions = new LinkedList<NodeHashMap>();
+    static ConcurrentLinkedDeque<NodeHashMap> solutions = new ConcurrentLinkedDeque<NodeHashMap>();
     
     ExecutorService executor;
     DataGraph startDG;
     Visitor visitor;
     UltimateRecurssion(ExecutorService executor, Visitor visitor, DataGraph startDG){
-        solutions = new LinkedList<NodeHashMap>();
+        solutions = new ConcurrentLinkedDeque<NodeHashMap>();
         this.visitor = visitor;
         this.startDG = startDG;
         this.executor = executor;
