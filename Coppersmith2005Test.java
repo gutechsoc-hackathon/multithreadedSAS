@@ -36,6 +36,10 @@ public class Coppersmith2005Test{
     final static int treeWidth = 2;
     static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
     
+    public void testUltimate(){
+        
+
+    }
     @Test
     public void testVisitor(){
         DataGraph dg = new DataGraph();
@@ -64,7 +68,7 @@ public class Coppersmith2005Test{
         System.out.println("hahaha");
         for(Node element: all){
             element.reset(dg);
-            //System.out.println(element.id);
+            //System.out.println(elemewatchingnt.id);
         }
         ExplorePredecessor magia = new ExplorePredecessor(threadPool, root, dg);
         threadPool.submit(magia);

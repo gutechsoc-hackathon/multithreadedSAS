@@ -33,11 +33,11 @@ import java.util.concurrent.atomic.AtomicInteger;
             Node current = start;
             while(current.mark_predecessor(dg)){
                 //System.out.println("thread" + current);
-                for(int i = 1; i < current.children.size(); i++){
+                for(int i = 1; i < current.parents.size(); i++){
                     counter.incrementAndGet();
-                    executor.execute(new ExplorePredecessor(executor, current.children.get(i), dg));
+                    executor.execute(new ExplorePredecessor(executor, current.parents.get(i), dg));
                 }
-                if (current.children.size() > 0) current = current.children.get(0);
+                if (current.parents.size() > 0) current = current.parents.get(0);
             }
             counter.decrementAndGet();
             synchronized (counter) {

@@ -30,6 +30,7 @@ public class Visitor{
             this.chm = chm;
             this.dg = dg;
         }
+
         @Override
         public void run(){
             Enumeration<Long> enumeration = chm.keys();
@@ -44,6 +45,16 @@ public class Visitor{
     DataGraph dg;
     VisitorThread[] threads;
     CountDownLatch finishedCounter;
+    
+    public Visitor(int threadsNumber){
+        threads = new VisitorThread[threadsNumber];
+        this.threadsNumber = threadsNumber;
+        finishedCounter = new CountDownLatch(threadsNumber);
+    }
+    
+    public void setDG(DataGraph dg){
+        this.dg = dg;
+    }
 
     public Visitor(int threadsNumber, DataGraph dg){
         this.dg = dg;

@@ -17,10 +17,12 @@
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+//TODO this has to support node iteration
 public class NodeHashMap{
+    
     ConcurrentHashMap<Long, Node>[] maps;
     int threadsNumber;
+    
     @SuppressWarnings("unchecked")
     public NodeHashMap(int threadsNumber, int size, float loadFactor){
         maps = new ConcurrentHashMap[threadsNumber];
@@ -29,14 +31,17 @@ public class NodeHashMap{
         }
         this.threadsNumber = threadsNumber;
     }
+    
     public void add(Node node){
         int prehash = (int)(node.id % threadsNumber);
         maps[prehash].put(node.id, node);
     }
+    
     public Node remove(Node node){
         int prehash = (int)(node.id % threadsNumber);
         return maps[prehash].remove(node.id);
     }
+    
     public int size(){
         int sum = 0;
         for (int i = 0; i<threadsNumber; i++){

@@ -15,6 +15,7 @@
  * all copies or substantial portions of the Software. 
  */
 
+//TODO I don't like this class anymore, it should be refactored into a factory.
 final class Globals{
 
     public static final int problemSizeReal = 100000;

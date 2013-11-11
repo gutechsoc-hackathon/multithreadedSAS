@@ -17,7 +17,34 @@
 
 
 public class Coppersmith2005{
-    
+    public static void main(String[] args){
+        DataGraph dg = GraphFactory.makeSanityCheckGraph();
+        new UltimateRecurssion(DataGraph.threadPool, DataGraph.visitor, dg);
+        synchronized (UltimateRecurssion.counter){
+            while (UltimateRecurssion.counter.get() != 0){
+                try {
+                    UltimateRecurssion.counter.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        for(NodeHashMap nhm: UltimateRecurssion.solutions){
+            Node[] array = new Node[nhm.size()];
+            nhm.toArray(array);
+            for(Node node: array){
+                System.out.println("node: " + node.id + "belongs to" + node.graph);
+            }
+        }
+    }
+    /*public static void main(String[] args){
+        DataGraph dg = GraphFactory.makeSanityCheckGraph();
+        Node[] nodes = new Node[dg.remainder.size()];
+        dg.remainder.toArray(nodes);
+        for(Node node : nodes){
+            System.out.println(node.id);
+        }
+    }*/
 }
 
 
