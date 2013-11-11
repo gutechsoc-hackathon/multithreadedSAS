@@ -60,8 +60,7 @@ class DataGraph{
 			for(Node adjacent: next.m_adjacent){
 				if(!adjacent.m_visited){
 					adjacent.visit();
-					System.out.println(next.m_id);
-					following.push(adjacent);
+=					following.push(adjacent);
 					continue outer;
 				}
 
