@@ -83,7 +83,9 @@ public class Coppersmith2005Test{
                 }
             }
         }
-
+        for(Node node: dg.predecessors){
+            System.out.println(node)
+        }
         Node[] array = new Node[treeElements];
         dg.predecessors.toArray(array);
         for(Node node: array){
