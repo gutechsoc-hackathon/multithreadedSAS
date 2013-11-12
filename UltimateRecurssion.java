@@ -44,10 +44,10 @@ public class UltimateRecurssion implements Runnable{
         ExplorePredecessor ep = new ExplorePredecessor(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
         ExploreDescendants ed = new ExploreDescendants(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
         executor.execute(ed);
-        //executor.execute(ep);
+        executor.execute(ep);
         
         synchronized (ExplorePredecessor.counter){
-            //System.out.println("pred conter: " + ExplorePredecessor.counter);
+            System.out.println("pred conter: " + ExplorePredecessor.counter);
 
             while (ExplorePredecessor.counter.get() != 0){
                 try {
@@ -57,10 +57,10 @@ public class UltimateRecurssion implements Runnable{
                     e.printStackTrace();
                 }
             }
-            //System.out.println("finished pre: ");
+            System.out.println("finished pre: ");
         }
         synchronized (ExploreDescendants.counter){
-            //System.out.println("desc conter: " + ExploreDescendants.counter);
+            System.out.println("desc conter: " + ExploreDescendants.counter);
             while (ExploreDescendants.counter.get() != 0){
                 try {
                 	//System.out.println(counter.get());
@@ -69,7 +69,7 @@ public class UltimateRecurssion implements Runnable{
                     e.printStackTrace();
                 }
             }
-            //System.out.println("finished des ");
+            System.out.println("finished des ");
         }
         /*if(startDG.descendants.size() > 0){
             counter.incrementAndGet();

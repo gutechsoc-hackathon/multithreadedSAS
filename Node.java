@@ -63,7 +63,7 @@ class Node implements Comparable<Node>{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-        int value = generator.nextInt();
+        //int value = generator.nextInt();
         
         //System.out.println("mark_pred: " + value);
         //TODO by correcting a concurrency bug all the tests have been screwed up. Well done.
@@ -95,7 +95,7 @@ class Node implements Comparable<Node>{
             e.printStackTrace();
         }*/
 
-        int value = generator.nextInt();
+        //int value = generator.nextInt();
         //System.out.println("mark_desc: " + value);
         if(descendant == false && graph == this.graph){
             descendant = true;

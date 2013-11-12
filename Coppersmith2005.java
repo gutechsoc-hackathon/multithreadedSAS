@@ -32,14 +32,15 @@ public class Coppersmith2005{
                 }
             }
         }
-        System.out.println(UltimateRecurssion.solutions.size());
+        System.out.println("size " + UltimateRecurssion.solutions.size());
         for(NodeHashMap nhm: UltimateRecurssion.solutions){
             Node[] array = new Node[nhm.size()];
             nhm.toArray(array);
             for(Node node: array){
-                System.out.println("node: " + node.id + "belongs to" + node.graph);
+                System.out.println("node: " + node.id + " belongs to " + node.graph);
             }
         }
+        System.out.println("finished");
     }
     /*public static void main(String[] args){
         DataGraph dg = GraphFactory.makeSanityCheckGraph();

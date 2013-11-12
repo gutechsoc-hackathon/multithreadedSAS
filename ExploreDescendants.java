@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
                 //System.out.println("thread" + current);
                 for(int i = 1; i < current.children.size(); i++){
                     counter.incrementAndGet();
-                    executor.execute(new ExplorePredecessor(executor, current.children.get(i), dg));
+                    executor.execute(new ExploreDescendants(executor, current.children.get(i), dg));
                 }
                 if (current.children.size() > 0) current = current.children.get(0);
             }
