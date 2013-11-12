@@ -16,11 +16,13 @@
  */
 
 import java.util.ArrayList;
+import java.util.Random;
 
 class Node implements Comparable<Node>{
 	final long id;
 	boolean predecessor;
 	boolean descendant;
+	static Random generator = new Random();
 	DataGraph graph;
 	ArrayList<Node> children = new ArrayList<Node>(Globals.childrenThreshold);
 	ArrayList<Node> parents = new ArrayList<Node>(Globals.childrenThreshold);
@@ -61,7 +63,9 @@ class Node implements Comparable<Node>{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
+        int value = generator.nextInt();
         
+        //System.out.println("mark_pred: " + value);
         //TODO by correcting a concurrency bug all the tests have been screwed up. Well done.
         if(predecessor == false && graph == this.graph){
             predecessor = true;
@@ -73,11 +77,14 @@ class Node implements Comparable<Node>{
                 graph.remainder.remove(this);
             }
             notifyAll();
+            //System.out.println("mark_pred finished: " + value);
             return true;
         } else{
             notifyAll();
+            //System.out.println("mark_pred finished: " + value);
             return false;
         }
+
     }
     
     public synchronized boolean mark_descendant(DataGraph graph){
@@ -87,6 +94,9 @@ class Node implements Comparable<Node>{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }*/
+
+        int value = generator.nextInt();
+        //System.out.println("mark_desc: " + value);
         if(descendant == false && graph == this.graph){
             descendant = true;
             if(predecessor == true){
@@ -97,9 +107,13 @@ class Node implements Comparable<Node>{
                 graph.remainder.remove(this);
             }
             notifyAll();
+            //System.out.println("mark_desc fin: " + value);
+
             return true;
         } else{
             notifyAll();
+            //System.out.println("mark_desc fin false: " + value);
+
             return false;
         }
     }

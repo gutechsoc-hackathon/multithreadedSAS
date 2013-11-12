@@ -23,9 +23,6 @@ class DataGraph{
     static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
     static LinkedList<NodeHashMap> solutions = new LinkedList<NodeHashMap>();
     static Visitor visitor = new Visitor(Globals.threads);
-    //TODO remainder creation can be tweaked for performance
-    //TODO folks on SO say to look at ConcurrentHashMap for performance.
-    //TODO here's an idea -- you can split remainder into t hashtables, where t is the number of available threads. And then every thread can do marking/ etc in it
     
     NodeHashMap remainder;
     NodeHashMap scc;

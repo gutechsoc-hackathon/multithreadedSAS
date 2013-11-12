@@ -23,6 +23,7 @@ import java.util.concurrent.CountDownLatch;
 public class Visitor{
     
     class VisitorThread extends Thread{
+
         ConcurrentHashMap<Long, Node> chm;
         DataGraph dg;
         public VisitorThread(ConcurrentHashMap<Long, Node> chm, DataGraph dg){
@@ -68,11 +69,13 @@ public class Visitor{
         int i = 0;
         for(ConcurrentHashMap<Long, Node> map: nhm.maps){
             threads[i] = new VisitorThread(map, dg);
+            i++;
         }
     }
     
     public void visitAll(){
         for(Thread thread : threads){
+        	System.out.println("here");
             thread.start();
         }
         try {

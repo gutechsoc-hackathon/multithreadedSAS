@@ -31,7 +31,7 @@ import org.junit.Test;
 
 
 public class Coppersmith2005Test{
-    public static int bigHashMapSize = 85000; // should create 680 MB size object; Will the object creation scale?
+    public static int bigHashMapSize = 800; // should create 680 MB size object; Will the object creation scale?
     final static int treeElements = 25;
     final static int treeWidth = 2;
     static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
@@ -76,7 +76,7 @@ public class Coppersmith2005Test{
         synchronized (ExplorePredecessor.counter){
             while (ExplorePredecessor.counter.get() != 0){
                 try {
-                    System.out.println(ExplorePredecessor.counter.get());
+                    //System.out.println(ExplorePredecessor.counter.get());
                     ExplorePredecessor.counter.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -93,6 +93,62 @@ public class Coppersmith2005Test{
         for(int i = 0; i < treeElements; i++){
            Assert.assertTrue(array[i].id == (i + 1));
         }         
+    }
+    @Test
+    public void testVisitorDesc(){
+        DataGraph dg = new DataGraph();
+        LinkedList<Node> all = new LinkedList<Node>();
+        int already = 2;
+        Node root = new Node(1);
+        Node last;
+        last = null;
+
+        LinkedList<Node> bfs = new LinkedList<Node>(); 
+        bfs.addFirst(root);
+        all.addFirst(root);
+        while(already <= treeElements){
+            Node subroot = bfs.pollLast();
+            for(int i = 1; i <= treeWidth; i++){
+                Node newElement = new Node(already);
+                subroot.connectChild(newElement);
+                all.addFirst(newElement);
+                bfs.addFirst(newElement);
+                already += 1;
+                last = newElement;
+            }
+        }
+        
+        System.out.println(last.id);
+
+        for(Node element: last.children){
+            System.out.println(element.id);
+        }
+        
+        System.out.println("hahaha");
+        for(Node element: all){
+            element.reset(dg);
+            //System.out.println(elemewatchingnt.id);
+        }
+        ExploreDescendants magia = new ExploreDescendants(threadPool, last, dg);
+        threadPool.submit(magia);
+        //threadPool.
+        synchronized (ExploreDescendants.counter){
+            while (ExploreDescendants.counter.get() != 0){
+                try {
+                    System.out.println(ExploreDescendants.counter.get());
+                    ExploreDescendants.counter.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Node[] array = new Node[treeElements];
+        dg.descendants.toArray(array);
+        for(Node node: array){
+            System.out.println("enlist: " + node.id);
+        }
+
     }
     
     @Test

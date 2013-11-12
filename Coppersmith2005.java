@@ -19,8 +19,11 @@
 public class Coppersmith2005{
     public static void main(String[] args){
         DataGraph dg = GraphFactory.makeSanityCheckGraph();
-        new UltimateRecurssion(DataGraph.threadPool, DataGraph.visitor, dg);
+        Runnable ur = new UltimateRecurssion(DataGraph.threadPool, DataGraph.visitor, dg);
+        DataGraph.threadPool.execute(ur);
         synchronized (UltimateRecurssion.counter){
+            System.out.println("main conter: " + UltimateRecurssion.counter);
+
             while (UltimateRecurssion.counter.get() != 0){
                 try {
                     UltimateRecurssion.counter.wait();
@@ -29,6 +32,7 @@ public class Coppersmith2005{
                 }
             }
         }
+        System.out.println(UltimateRecurssion.solutions.size());
         for(NodeHashMap nhm: UltimateRecurssion.solutions){
             Node[] array = new Node[nhm.size()];
             nhm.toArray(array);
