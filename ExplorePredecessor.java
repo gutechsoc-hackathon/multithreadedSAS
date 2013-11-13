@@ -37,7 +37,10 @@ import java.util.concurrent.atomic.AtomicInteger;
                     counter.incrementAndGet();
                     executor.execute(new ExplorePredecessor(executor, current.parents.get(i), dg));
                 }
-                if (current.parents.size() > 0) current = current.parents.get(0);
+                if (current.parents.size() > 0){
+                    System.out.println("current node is " + current.id);
+                    current = current.parents.get(0);
+                }
             }
             counter.decrementAndGet();
             synchronized (counter) {

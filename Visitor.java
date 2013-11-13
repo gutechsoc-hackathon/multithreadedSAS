@@ -78,11 +78,7 @@ public class Visitor{
         	System.out.println("here");
             thread.start();
         }
-        try {
-            finishedCounter.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
     
 

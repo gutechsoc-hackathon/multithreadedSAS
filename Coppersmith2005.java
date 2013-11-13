@@ -1,3 +1,6 @@
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 /*
  * The MIT License (MIT)
  * 
@@ -20,7 +23,7 @@ public class Coppersmith2005{
     public static void main(String[] args){
         DataGraph dg = GraphFactory.makeSanityCheckGraph();
         Runnable ur = new UltimateRecurssion(DataGraph.threadPool, DataGraph.visitor, dg);
-        DataGraph.threadPool.execute(ur);
+        Future value = DataGraph.threadPool.submit(ur);
         synchronized (UltimateRecurssion.counter){
             System.out.println("main conter: " + UltimateRecurssion.counter);
 
@@ -31,7 +34,16 @@ public class Coppersmith2005{
                     e.printStackTrace();
                 }
             }
+            System.out.println("finished main conter");
         }
+        
+        try {
+            System.out.println("future says " + value.get());
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        DataGraph.threadPool.shutdown();
         System.out.println("size " + UltimateRecurssion.solutions.size());
         for(NodeHashMap nhm: UltimateRecurssion.solutions){
             Node[] array = new Node[nhm.size()];
@@ -41,6 +53,7 @@ public class Coppersmith2005{
             }
         }
         System.out.println("finished");
+        
     }
     /*public static void main(String[] args){
         DataGraph dg = GraphFactory.makeSanityCheckGraph();

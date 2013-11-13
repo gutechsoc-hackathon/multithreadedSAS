@@ -32,15 +32,24 @@ public class UltimateRecurssion implements Runnable{
             startDG.remainder.toArray(array);
             array[0].reset(startDG);
             UltimateRecurssion.solutions.push(startDG.remainder);
+            System.out.println("I shouldn't be here");
             counter.decrementAndGet();
             synchronized (counter) {
                 counter.notifyAll();
             }
             return;
         }
+        
         visitor.setDG(startDG);
         visitor.newJob(startDG.remainder);
+        startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()).reset(startDG);
         visitor.visitAll();
+        try {
+            visitor.finishedCounter.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ExplorePredecessor ep = new ExplorePredecessor(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
         ExploreDescendants ed = new ExploreDescendants(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
         executor.execute(ed);
@@ -71,7 +80,7 @@ public class UltimateRecurssion implements Runnable{
             }
             System.out.println("finished des ");
         }
-        /*if(startDG.descendants.size() > 0){
+        if(startDG.descendants.size() > 0){
             counter.incrementAndGet();
             Runnable ur = new UltimateRecurssion(executor, visitor, new DataGraph(startDG.predecessors));
             executor.execute(ur);
@@ -87,12 +96,14 @@ public class UltimateRecurssion implements Runnable{
             counter.incrementAndGet();
             Runnable ur = new UltimateRecurssion(executor, visitor, new DataGraph(startDG.descendants));
             executor.execute(ur);
-        }*/
-
-        solutions.push(startDG.scc);
+        }
+        Object value = solutions.offer(startDG.scc);
+        //System.out.println("accepted: " + value);
         counter.decrementAndGet();
+        //System.out.println("counter" + counter);
         synchronized (counter) {
             counter.notifyAll();
         }
+        return;
     }
 }

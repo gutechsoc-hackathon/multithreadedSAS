@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.LinkedList;
@@ -31,7 +32,7 @@ import org.junit.Test;
 
 
 public class Coppersmith2005Test{
-    public static int bigHashMapSize = 800; // should create 680 MB size object; Will the object creation scale?
+    public static int bigHashMapSize = 80000; // should create 680 MB size object; Will the object creation scale?
     final static int treeElements = 25;
     final static int treeWidth = 2;
     static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
@@ -43,11 +44,11 @@ public class Coppersmith2005Test{
     @Test
     public void testVisitor(){
         DataGraph dg = new DataGraph();
-        LinkedList<Node> all = new LinkedList<Node>();
+        ConcurrentLinkedDeque<Node> all = new ConcurrentLinkedDeque<Node>();
         int already = 2;
         Node root = new Node(1);
 
-        LinkedList<Node> bfs = new LinkedList<Node>(); 
+        ConcurrentLinkedDeque<Node> bfs = new ConcurrentLinkedDeque<Node>(); 
         bfs.addFirst(root);
         all.addFirst(root);
         while(already <= treeElements){
@@ -60,35 +61,33 @@ public class Coppersmith2005Test{
                 already += 1;
             }
         }
-        
+        //System.out.println(root.children.get(0).children.get(0).children.size());
         for(Node element: root.children.get(0).children){
-            System.out.println(element.id);
+            //System.out.println(element.id);
         }
         
-        System.out.println("hahaha");
+        //System.out.println("hahaha");
         for(Node element: all){
             element.reset(dg);
             //System.out.println(elemewatchingnt.id);
         }
-        ExplorePredecessor magia = new ExplorePredecessor(threadPool, root, dg);
+        ExploreDescendants magia = new ExploreDescendants(threadPool, root, dg);
         threadPool.submit(magia);
         //threadPool.
-        synchronized (ExplorePredecessor.counter){
-            while (ExplorePredecessor.counter.get() != 0){
+        synchronized (ExploreDescendants.counter){
+            while (ExploreDescendants.counter.get() != 0){
                 try {
                     //System.out.println(ExplorePredecessor.counter.get());
-                    ExplorePredecessor.counter.wait();
+                    ExploreDescendants.counter.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
-
+        DataGraph.threadPool.shutdown();
         Node[] array = new Node[treeElements];
-        dg.predecessors.toArray(array);
-        for(Node node: array){
-            System.out.println("enlist: " + node.id);
-        }
+        dg.descendants.toArray(array);
+        System.out.println(dg.descendants.size());
         Arrays.sort(array);
         for(int i = 0; i < treeElements; i++){
            Assert.assertTrue(array[i].id == (i + 1));
@@ -118,25 +117,25 @@ public class Coppersmith2005Test{
             }
         }
         
-        System.out.println(last.id);
+        //System.out.println(last.id);
 
         for(Node element: last.children){
-            System.out.println(element.id);
+            //System.out.println(element.id);
         }
         
-        System.out.println("hahaha");
+        //System.out.println("hahaha");
         for(Node element: all){
             element.reset(dg);
             //System.out.println(elemewatchingnt.id);
         }
-        ExploreDescendants magia = new ExploreDescendants(threadPool, last, dg);
+        ExplorePredecessor magia = new ExplorePredecessor(threadPool, last, dg);
         threadPool.submit(magia);
         //threadPool.
-        synchronized (ExploreDescendants.counter){
-            while (ExploreDescendants.counter.get() != 0){
+        synchronized (ExplorePredecessor.counter){
+            while (ExplorePredecessor.counter.get() != 0){
                 try {
-                    System.out.println(ExploreDescendants.counter.get());
-                    ExploreDescendants.counter.wait();
+                    //System.out.println(ExploreDescendants.counter.get());
+                    ExplorePredecessor.counter.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -144,7 +143,8 @@ public class Coppersmith2005Test{
         }
 
         Node[] array = new Node[treeElements];
-        dg.descendants.toArray(array);
+        //dg.descendants.toArray(array);
+        System.out.println(dg.predecessors.size());
         for(Node node: array){
             System.out.println("enlist: " + node.id);
         }
