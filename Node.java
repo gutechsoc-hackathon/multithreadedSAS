@@ -22,7 +22,7 @@ class Node implements Comparable<Node>{
 	final long id;
 	boolean predecessor;
 	boolean descendant;
-	
+	static Random generator = new Random();
 	DataGraph graph;
 	ArrayList<Node> children = new ArrayList<Node>(Globals.childrenThreshold);
 	ArrayList<Node> parents = new ArrayList<Node>(Globals.childrenThreshold);

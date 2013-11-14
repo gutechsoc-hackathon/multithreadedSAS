@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 
 class DataGraph{
     static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
+    static LinkedList<NodeHashMap> solutions = new LinkedList<NodeHashMap>();
     static Visitor visitor = new Visitor(Globals.threads);
     
     NodeHashMap remainder;
