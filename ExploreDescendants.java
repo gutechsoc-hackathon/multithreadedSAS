@@ -34,7 +34,12 @@ import java.util.concurrent.atomic.AtomicInteger;
             while(current.mark_descendant(dg)){
                 //System.out.println("thread" + current);
                 for(int i = 1; i < current.children.size(); i++){
+                    System.out.println("current node = " + current.id);
                     counter.incrementAndGet();
+                    if(executor.isShutdown()) throw new RuntimeException("shutdown!");
+                    if(current.children.get(i) == null) throw new RuntimeException("child null for i = " + i);
+                    if(current.children.get(i) == null) throw new RuntimeException("dg null for i = " + i);
+
                     executor.execute(new ExploreDescendants(executor, current.children.get(i), dg));
                 }
                 if (current.children.size() > 0) current = current.children.get(0);

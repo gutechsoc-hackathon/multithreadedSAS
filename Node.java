@@ -97,6 +97,7 @@ class Node implements Comparable<Node>{
 
         //int value = generator.nextInt();
         //System.out.println("mark_desc: " + value);
+        System.out.println("node enter desc");
         if(descendant == false && graph == this.graph){
             descendant = true;
             if(predecessor == true){
@@ -108,11 +109,13 @@ class Node implements Comparable<Node>{
             }
             notifyAll();
             //System.out.println("mark_desc fin: " + value);
+            System.out.println("node leave true desc");
 
             return true;
         } else{
             notifyAll();
             //System.out.println("mark_desc fin false: " + value);
+            System.out.println("node leave false desc");
 
             return false;
         }

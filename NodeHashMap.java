@@ -32,6 +32,15 @@ public class NodeHashMap{
         this.threadsNumber = threadsNumber;
     }
     
+    public Node serveFirst(){
+        for(int i = 0; i< this.threadsNumber; i++){
+            if(!maps[i].isEmpty()){
+                return maps[i].get(maps[i].keys().nextElement());
+            }
+        }
+        return null;
+    }
+    
     public void add(Node node){
         int prehash = (int)(node.id % threadsNumber);
         maps[prehash].put(node.id, node);

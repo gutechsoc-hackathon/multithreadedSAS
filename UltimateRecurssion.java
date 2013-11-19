@@ -26,7 +26,14 @@ public class UltimateRecurssion implements Runnable{
      */
     @Override
     public void run(){
-    	System.out.println("here");
+    	//System.out.println("here");
+    	if (startDG.remainder.size() == 0){
+            counter.decrementAndGet();
+            synchronized (counter) {
+                counter.notifyAll();
+            }
+    	    return;
+    	}
         if (startDG.remainder.size() == 1){
             Node[] array = new Node[1];
             startDG.remainder.toArray(array);
@@ -42,7 +49,8 @@ public class UltimateRecurssion implements Runnable{
         
         visitor.setDG(startDG);
         visitor.newJob(startDG.remainder);
-        startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()).reset(startDG);
+        //startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()).reset(startDG);
+        startDG.remainder.serveFirst().reset(startDG);
         visitor.visitAll();
         try {
             visitor.finishedCounter.await();
@@ -50,8 +58,12 @@ public class UltimateRecurssion implements Runnable{
             e.printStackTrace();
         }
 
-        ExplorePredecessor ep = new ExplorePredecessor(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
-        ExploreDescendants ed = new ExploreDescendants(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
+        //ExplorePredecessor ep = new ExplorePredecessor(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
+        //ExploreDescendants ed = new ExploreDescendants(executor, startDG.remainder.maps[0].get(startDG.remainder.maps[0].keys().nextElement()), startDG);
+        //TODO performance-wise it isn't wise to start recurssion on the same elements as it might collide a bit...
+        ExplorePredecessor ep = new ExplorePredecessor(executor, startDG.remainder.serveFirst(), startDG);
+        ExploreDescendants ed = new ExploreDescendants(executor, startDG.remainder.serveFirst(), startDG);
+
         executor.execute(ed);
         executor.execute(ep);
         
@@ -66,7 +78,7 @@ public class UltimateRecurssion implements Runnable{
                     e.printStackTrace();
                 }
             }
-            System.out.println("finished pre: ");
+            System.out.println("finished pred: ");
         }
         synchronized (ExploreDescendants.counter){
             System.out.println("desc conter: " + ExploreDescendants.counter);
@@ -80,6 +92,9 @@ public class UltimateRecurssion implements Runnable{
             }
             System.out.println("finished des ");
         }
+        ExploreDescendants.counter = new AtomicInteger(1);
+        ExplorePredecessor.counter = new AtomicInteger(1);
+        
         if(startDG.descendants.size() > 0){
             counter.incrementAndGet();
             Runnable ur = new UltimateRecurssion(executor, visitor, new DataGraph(startDG.predecessors));

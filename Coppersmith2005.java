@@ -25,7 +25,7 @@ public class Coppersmith2005{
         Runnable ur = new UltimateRecurssion(DataGraph.threadPool, DataGraph.visitor, dg);
         Future value = DataGraph.threadPool.submit(ur);
         synchronized (UltimateRecurssion.counter){
-            System.out.println("main conter: " + UltimateRecurssion.counter);
+            //System.out.println("main conter: " + UltimateRecurssion.counter);
 
             while (UltimateRecurssion.counter.get() != 0){
                 try {
@@ -37,12 +37,6 @@ public class Coppersmith2005{
             System.out.println("finished main conter");
         }
         
-        try {
-            System.out.println("future says " + value.get());
-        } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         DataGraph.threadPool.shutdown();
         System.out.println("size " + UltimateRecurssion.solutions.size());
         for(NodeHashMap nhm: UltimateRecurssion.solutions){

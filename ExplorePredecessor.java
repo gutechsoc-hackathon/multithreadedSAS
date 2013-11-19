@@ -32,9 +32,10 @@ import java.util.concurrent.atomic.AtomicInteger;
         public void run(){
             Node current = start;
             while(current.mark_predecessor(dg)){
-                //System.out.println("thread" + current);
+                System.out.println("node in explorePredecessor is " + current);
                 for(int i = 1; i < current.parents.size(); i++){
                     counter.incrementAndGet();
+                    if(executor.isShutdown()) throw new RuntimeException("shutdown!");
                     executor.execute(new ExplorePredecessor(executor, current.parents.get(i), dg));
                 }
                 if (current.parents.size() > 0){
