@@ -18,21 +18,19 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-class Node implements Comparable<Node>{
+class Node/* implements Comparable<Node>*/{
 	final long id;
+	final static int childrenNo = 5;
 	boolean predecessor;
 	boolean descendant;
-	static Random generator = new Random();
 	DataGraph graph;
-	ArrayList<Node> children = new ArrayList<Node>(Globals.childrenThreshold);
-	ArrayList<Node> parents = new ArrayList<Node>(Globals.childrenThreshold);
+	ArrayList<Node> children = new ArrayList<Node>(childrenNo);
+	ArrayList<Node> parents = new ArrayList<Node>(childrenNo);
 	
 	/**
 	 * @param id id == 0 will break your code. You have been warned.
 	 */
-	
     public Node(long id){
-        assert(id != 0);
         this.id = id;
         predecessor = false;
     	descendant = false;
@@ -58,15 +56,6 @@ class Node implements Comparable<Node>{
     
     //TODO this can be tweaked in many ways. There's some redundancy. Also, I'd like to see it merged with mark_descendants. I'm afraid to touch it at the moment, since my testcases aren't very powerful, and there's nothing simpler than poison your code with race conditions.
     public synchronized boolean mark_predecessor(DataGraph graph){
-       /* {
-            java.lang.Thread.sleep(7);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-        //int value = generator.nextInt();
-        
-        //System.out.println("mark_pred: " + value);
-        //TODO by correcting a concurrency bug all the tests have been screwed up. Well done.
         if(predecessor == false && graph == this.graph){
             predecessor = true;
             if(descendant == true){
@@ -88,15 +77,6 @@ class Node implements Comparable<Node>{
     }
     
     public synchronized boolean mark_descendant(DataGraph graph){
-        /*try {
-            java.lang.Thread.sleep(3);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
-
-        //int value = generator.nextInt();
-        //System.out.println("mark_desc: " + value);
         System.out.println("node enter desc");
         if(descendant == false && graph == this.graph){
             descendant = true;
@@ -108,21 +88,15 @@ class Node implements Comparable<Node>{
                 graph.remainder.remove(this);
             }
             notifyAll();
-            //System.out.println("mark_desc fin: " + value);
-            System.out.println("node leave true desc");
-
             return true;
         } else{
             notifyAll();
-            //System.out.println("mark_desc fin false: " + value);
-            System.out.println("node leave false desc");
-
             return false;
         }
     }
     
-    @Override
+    /*@Override
     public int compareTo(Node node) {
         return Long.compare(this.id, node.id);
-    }
+    }*/
 }

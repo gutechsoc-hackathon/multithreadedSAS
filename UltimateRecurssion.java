@@ -15,8 +15,8 @@ public class UltimateRecurssion implements Runnable{
         this.visitor = visitor;
         this.startDG = startDG;
         this.executor = executor;
+        /**
     }
-    /**
      * This is the final step in a few days of a hard work. The method run has to:
      * mark all the nodes as belonging to startDG. It has to be done in parallel, that's
      * why I was working on the Visitor class. Later it has to explore all the descendants
