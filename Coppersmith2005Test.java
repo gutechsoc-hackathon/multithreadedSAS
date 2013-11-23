@@ -35,7 +35,7 @@ public class Coppersmith2005Test{
     public static int bigHashMapSize = 80000; // should create 680 MB size object; Will the object creation scale?
     final static int treeElements = 25;
     final static int treeWidth = 2;
-    static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
+    static ExecutorService threadPool = Executors.newFixedThreadPool(GraphFactory.threads);
     
     public void testUltimate(){
         
@@ -287,7 +287,7 @@ public class Coppersmith2005Test{
      */
     public void multiThreads() throws InterruptedException{
         final DataGraph multiGraph = new DataGraph();
-        int size = Globals.problemSizeTests;
+        int size = GraphFactory.problemSizeTests;
         for(int i = 1; i <= size; i++){
             int id = i;
             multiGraph.addNode(new Node(id));
@@ -305,10 +305,10 @@ public class Coppersmith2005Test{
         final int partition[] = new int[numberOfThreads + 1];
         partition[0] = 0;
         for(int i = 1; i < numberOfThreads; i++){
-            partition[i] = generator.nextInt(Globals.problemSizeTests + 1);
+            partition[i] = generator.nextInt(GraphFactory.problemSizeTests + 1);
         }
         
-        partition[numberOfThreads] = Globals.problemSizeTests;
+        partition[numberOfThreads] = GraphFactory.problemSizeTests;
         Arrays.sort(partition);
         
         abstract class PreDesThread extends Thread{
@@ -359,10 +359,10 @@ public class Coppersmith2005Test{
         for(int i = 0; i < numberOfThreads; i++){
             descendantsThreads[i] = new DesThread(partition[i], partition[i + 1], pullList);
         }
-        Assert.assertTrue(multiGraph.remainder.size() + multiGraph.predecessors.size() + multiGraph.descendants.size() + multiGraph.scc.size() == Globals.problemSizeTests);
+        Assert.assertTrue(multiGraph.remainder.size() + multiGraph.predecessors.size() + multiGraph.descendants.size() + multiGraph.scc.size() == GraphFactory.problemSizeTests);
         
                 
-        Node[] entireNode = new Node[Globals.problemSizeTests];
+        Node[] entireNode = new Node[GraphFactory.problemSizeTests];
         
         for(PreThread thread: predecessorThreads){
             thread.start();
@@ -380,7 +380,7 @@ public class Coppersmith2005Test{
         
         multiGraph.scc.toArray(entireNode);
         
-        Long[] entire = new Long[Globals.problemSizeTests];
+        Long[] entire = new Long[GraphFactory.problemSizeTests];
         int ii = 0;
         for(Node node : entireNode){
             entire[ii] = entireNode[ii].id;
@@ -388,9 +388,9 @@ public class Coppersmith2005Test{
         }
         
         Arrays.sort(entire);
-        Long[] compare = new Long[Globals.problemSizeTests];
+        Long[] compare = new Long[GraphFactory.problemSizeTests];
         
-        for(long li = 0; li < Globals.problemSizeTests; li++){
+        for(long li = 0; li < GraphFactory.problemSizeTests; li++){
             compare[(int)li] = li + 1;
         }
         

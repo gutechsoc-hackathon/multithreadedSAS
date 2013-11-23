@@ -1,3 +1,5 @@
+package test;
+
 /*
  * The MIT License (MIT)
  * 
@@ -14,29 +16,19 @@
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software. 
  */
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
 
-
-    class ExplorePredecessor implements Runnable{
-        static AtomicInteger counter = new AtomicInteger(1);
-        ExecutorService executor;
-        Node start;
-        DataGraph dg;
-        ExplorePredecessor(ExecutorService executor, Node start, DataGraph dg){
-            this.executor = executor;
-            this.start = start;
-            this.dg = dg;
+    class ExplorePredecessors extends GraphExplorator{
+        ExplorePredecessors(Node start, DataGraph dg){
+            super(start, dg);
         }
         @Override
         public void run(){
             Node current = start;
             while(current.mark_predecessor(dg)){
-                System.out.println("node in explorePredecessor is " + current);
                 for(int i = 1; i < current.parents.size(); i++){
                     counter.incrementAndGet();
-                    if(executor.isShutdown()) throw new RuntimeException("shutdown!");
-                    executor.execute(new ExplorePredecessor(executor, current.parents.get(i), dg));
+                    //if(executor.isShutdown()) throw new RuntimeException("shutdown!");
+                    executor.execute(new ExplorePredecessors(current.parents.get(i), dg));
                 }
                 if (current.parents.size() > 0){
                     System.out.println("current node is " + current.id);

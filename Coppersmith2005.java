@@ -1,7 +1,12 @@
-package test;
+
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import test.DataGraph;
+import test.locales;
+import test.Node;
+import test.NodeHashMap;
 
 /*
  * The MIT License (MIT)
@@ -23,7 +28,7 @@ import java.util.concurrent.Future;
 
 public class Coppersmith2005{
     public static void main(String[] args){
-        DataGraph dg = GraphFactory.makeSanityCheckGraph();
+        DataGraph dg = locales.makeSanityCheckGraph();
         Runnable ur = new UltimateRecurssion(DataGraph.threadPool, DataGraph.visitor, dg);
         Future value = DataGraph.threadPool.submit(ur);
         synchronized (UltimateRecurssion.counter){

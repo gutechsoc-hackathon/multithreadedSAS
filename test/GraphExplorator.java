@@ -1,3 +1,5 @@
+package test;
+
 /*
  * The MIT License (MIT)
  * 
@@ -14,13 +16,14 @@
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software. 
  */
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 abstract class GraphExplorator implements Runnable{
     static AtomicInteger counter = new AtomicInteger(1);
-    final static ExecutorService executor;
+    static ExecutorService executor;
     final Node start;
     final DataGraph dg;
     
@@ -38,6 +41,14 @@ abstract class GraphExplorator implements Runnable{
         setExecutor(executor);        
     }
     
+    public void waitExploration() throws InterruptedException{
+        synchronized (counter){
+            while (counter.get() != 0){
+                counter.wait();
+            }
+        }
+        counter.set(1);
+    }
     @Override
     abstract public void run();
     

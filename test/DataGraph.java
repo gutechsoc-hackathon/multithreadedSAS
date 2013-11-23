@@ -1,3 +1,5 @@
+package test;
+
 /*
  * The MIT License (MIT)
  * 
@@ -15,14 +17,15 @@
  * all copies or substantial portions of the Software. 
  */
 
-import java.util.LinkedList;
+import java.io.Serializable;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class DataGraph{
-    static ExecutorService threadPool = Executors.newFixedThreadPool(Globals.threads);
-    static LinkedList<NodeHashMap> solutions = new LinkedList<NodeHashMap>();
-    static Visitor visitor = new Visitor(Globals.threads);
+class DataGraph implements Serializable{
+    private static final long serialVersionUID = 1L;
+    static ExecutorService threadPool = Executors.newFixedThreadPool(GraphFactory.locales.threads);
+    static PriorityBlockingQueue<NodeHashMap> solutions = new PriorityBlockingQueue<NodeHashMap>();
     
     NodeHashMap remainder;
     NodeHashMap scc;
@@ -30,23 +33,35 @@ class DataGraph{
     NodeHashMap descendants;
     
     public DataGraph(){
-        remainder = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
-        scc = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
-        predecessors = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
-        descendants = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
+        try{
+            remainder = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.locales.hashMapCap, GraphFactory.locales.loadFactor);
+            scc = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.locales.hashMapCap, GraphFactory.locales.loadFactor);
+            predecessors = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.locales.hashMapCap, GraphFactory.locales.loadFactor);
+            descendants = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.locales.hashMapCap, GraphFactory.locales.loadFactor);
+        } catch (NullPointerException e){
+            System.err.println("remember to set locales by invoking DataGraph.setLocales()");
+        }
     }
 
     public DataGraph(NodeHashMap remainder){
-        this.remainder = remainder;
-        scc = new NodeHashMap(Globals.threads, Globals.sizeToCap(remainder.size()), Globals.loadFactor);
-        predecessors = new NodeHashMap(Globals.threads, Globals.sizeToCap(remainder.size()), Globals.loadFactor);
-        descendants = new NodeHashMap(Globals.threads, Globals.sizeToCap(remainder.size()), Globals.loadFactor);
+        try{
+            this.remainder = remainder;
+            scc = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.sizeToCap(remainder.size()), GraphFactory.locales.loadFactor);
+            predecessors = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.sizeToCap(remainder.size()), GraphFactory.locales.loadFactor);
+            descendants = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.sizeToCap(remainder.size()), GraphFactory.locales.loadFactor);
+        } catch (NullPointerException e){
+            System.err.println("remember to set locales by invoking DataGraph.setLocales()");
+        }
     }
     
     public DataGraph(Iterable<Node> nodes){
-        remainder = new NodeHashMap(Globals.threads, Globals.hashMapCap, Globals.loadFactor);
-        for (Node node : nodes){
-            remainder.add(node);
+        try {
+            remainder = new NodeHashMap(GraphFactory.locales.threads, GraphFactory.locales.hashMapCap, GraphFactory.locales.loadFactor);
+            for (Node node : nodes){
+                remainder.add(node);
+            }
+        } catch (NullPointerException e){
+            System.err.println("remember to set locales by invoking DataGraph.setLocales()");
         }
     }
     
@@ -61,9 +76,5 @@ class DataGraph{
         node.reset(this);
         this.remainder.add(node);
     }
-
-    /**
-     * @param start -- this should be started immediately when threadPool spins a new thread. The job should be accessible from the stack if the stack is empty. The threadPool should wait for all threads to finish and once they do check for emptiness of stack. Or something like that. Thread safe. 
-     */
     
 }

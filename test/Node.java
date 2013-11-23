@@ -1,3 +1,5 @@
+package test;
+
 /*
  * The MIT License (MIT)
  * 
@@ -54,7 +56,7 @@ class Node/* implements Comparable<Node>*/{
         return;
     }
     
-    //TODO this can be tweaked in many ways. There's some redundancy. Also, I'd like to see it merged with mark_descendants. I'm afraid to touch it at the moment, since my testcases aren't very powerful, and there's nothing simpler than poison your code with race conditions.
+    //TODO this can be tweaked in many ways. There's some redundancy. Also, I'd like to see it merged with mark_descendants. I'm afraid to touch it at the moment, since my testcases aren't very powerful, and there's nothing simpler than poison code with race conditions.
     public synchronized boolean mark_predecessor(DataGraph graph){
         if(predecessor == false && graph == this.graph){
             predecessor = true;
@@ -66,11 +68,9 @@ class Node/* implements Comparable<Node>*/{
                 graph.remainder.remove(this);
             }
             notifyAll();
-            //System.out.println("mark_pred finished: " + value);
             return true;
         } else{
             notifyAll();
-            //System.out.println("mark_pred finished: " + value);
             return false;
         }
 
