@@ -1,3 +1,5 @@
+package test;
+
 /*
  * The MIT License (MIT)
  * 

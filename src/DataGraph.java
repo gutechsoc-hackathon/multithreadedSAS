@@ -22,7 +22,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class DataGraph implements Serializable{
+public class DataGraph implements Serializable{
     private static final long serialVersionUID = 1L;
     static ExecutorService threadPool = Executors.newFixedThreadPool(GraphFactory.locales.threads);
     static PriorityBlockingQueue<NodeHashMap> solutions = new PriorityBlockingQueue<NodeHashMap>();

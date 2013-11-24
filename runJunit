@@ -1,1 +1,0 @@
-java -cp junit4.jar:./ org.junit.runner.JUnitCore Coppersmith2005Test
